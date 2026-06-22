@@ -1,23 +1,19 @@
-# Évaluation Conteneurisation - Piscine Docker
+# Evaluation Conteneurisation - Piscine Docker
 
-Bienvenue sur le dépôt de mon évaluation de conteneurisation. 
-Ce projet regroupe les trois travaux pratiques réalisés pour valider les compétences d'orchestration et de déploiement avec **Docker** et **Docker Compose**.
+Ce repertoire contient l'integralite de mon travail pour l'evaluation du module DevOps. L'objectif de ce projet est de demontrer la maitrise de l'orchestration et du deploiement d'applications via Docker et Docker Compose.
 
-## Structure du dépôt
+## Structure du projet
 
-Chaque TP dispose de son propre dossier autonome avec les instructions détaillées pour le lancer localement :
+L'evaluation est decoupee en trois travaux pratiques independants :
 
-* **[TP1 - Réparation d'une image Docker](./TP1)**
-  * *Notions :* Optimisation de Dockerfile, layers, sécurité (non-root), Alpine Linux.
-* **[TP2 - Stack Multi-services](./TP2)**
-  * *Notions :* Docker Compose, volumes persistants, variables d'environnement (`.env`), intégration d'outils tiers (Adminer, PostgreSQL, Node.js, Nginx).
-* **[TP3 - Conteneurisation de TaskFlow](./TP3)**
-  * *Notions :* Multi-conteneurs complet (Frontend statique, Backend API, Cache Redis isolé), réseaux internes, `.dockerignore`.
+* **[TP1 - Reparation d'une image Docker](./TP1) :** Resolution de problemes sur un Dockerfile existant, optimisation des layers, et application des regles de securite (utilisateur non-root, poids reduit).
+* **[TP2 - Docker Compose (Stack multi-services)](./TP2) :** Deploiement d'une infrastructure complete (Frontend Nginx, API Node.js, Base de donnees PostgreSQL) avec persistance des donnees et integration de l'outil Adminer.
+* **[TP3 - Conteneurisation de TaskFlow](./TP3) :** Mise en production d'une application de gestion de taches avec un backend Node.js, un frontend statique, et un cache Redis completement isole du reseau exterieur.
 
-## Prérequis globaux
+## Materiel et Prerequis
 
-Pour exécuter les environnements de ce dépôt, vous aurez besoin de :
-* [Docker](https://docs.docker.com/get-docker/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
+Pour executer les differents environnements, votre machine doit disposer des elements suivants :
+* Docker et Docker Compose installes et actifs.
+* Les ports locaux 3000, 3001, 8080 et 8081 doivent etre libres.
 
-> *Note : Tous les ports utilisés ont été standardisés (3000, 3001, 8080, 8081). Veillez à éteindre les conteneurs d'un TP (`docker compose down`) avant de lancer le suivant pour éviter les conflits de ports.*
+Veillez a toujours couper l'environnement d'un TP avec la commande `docker compose down` avant de lancer le suivant afin de liberer les ports.

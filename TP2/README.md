@@ -1,42 +1,45 @@
-# TP2 - Docker Compose : Stack Multi-services
+# TP2 - Docker Compose : Stack multi-services
 
-Ce projet déploie une infrastructure complète composée de 4 services interconnectés :
-- Un **Frontend** (Nginx)
-- Une **API** (Node.js)
-- Une **Base de données** sécurisée (PostgreSQL)
-- Un outil d'administration **Adminer**
+## Contexte
+L'objectif de ce TP est de relier trois services (Frontend web, API Node.js, et une base de donnees PostgreSQL) via Docker Compose. Une interface d'administration Adminer a egalement ete ajoutee.
 
-## Prérequis
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (qui inclut Docker Compose) installé et démarré.
-- Assurez-vous que les ports `3000`, `8080` et `8081` de votre machine sont libres.
+## Configuration initiale
+Creez un fichier nomme `.env` a la racine du dossier `tp2/` et ajoutez-y la variable suivante :
+`DB_PASSWORD=VotreMotDePasseSecurise`
 
-## Installation
+## Deploiement de l'infrastructure
+Construisez et lancez l'infrastructure complete :
+`docker compose up --build`
 
-Avant de démarrer, vous devez configurer le mot de passe de la base de données.
-Créez un fichier nommé `.env` à la racine de ce dossier (TP2) et ajoutez-y cette ligne :
-`DB_PASSWORD=VotreMotDePasseSécurisé123!`
+## Verifications
 
-## Démarrer l'infrastructure
+**Etape 1 - Lancement et acces de base**
+1. Ouvrir le frontend : Allez sur http://localhost:8080 (La page doit s'afficher).
+2. Tester l'API : Allez sur http://localhost:3000/health (Attendu : `{"status":"ok"}`).
+3. Tester la communication API/BDD : Envoyer un message depuis le frontend, il doit apparaitre dans la liste.
 
-Lancez la commande suivante pour compiler et démarrer tous les services en arrière-plan :
-`docker compose up --build -d`
+**Etape 2a - Persistance des donnees (Volumes)**
+1. Ajouter 3 messages depuis le frontend.
+2. Eteindre l'infrastructure : 
+`docker compose down`
+3. Relancer l'infrastructure en arriere-plan : 
+`docker compose up -d`
+4. Ouvrir http://localhost:8080 : Les messages doivent toujours etre la.
 
-## 🌐 Accès aux services
+**Etape 2b - Fichier .env pour les secrets**
+Aucun mot de passe ne doit apparaitre en clair dans le fichier de configuration.
+`grep -i password docker-compose.yml`
+*(Attendu : uniquement des references comme `${DB_PASSWORD}`, jamais la valeur reelle).*
 
-Une fois les conteneurs démarrés, ouvrez votre navigateur :
-
-1. **Frontend (Interface Web) :** **http://localhost:8080**
-2. **API (Healthcheck) :** **http://localhost:3000/health**
-3. **Adminer (Gestion BDD) :** **http://localhost:8081**
-
-*Identifiants pour Adminer :*
-- **Système :** PostgreSQL
-- **Serveur :** database
-- **Utilisateur :** tp2user
-- **Mot de passe :** *(Celui que vous avez mis dans le fichier .env)*
-- **Base de données :** tp2db
+**Etape 3 - Service tiers (Adminer)**
+1. Ouvrir l'interface : Allez sur http://localhost:8081 (L'interface Adminer s'affiche).
+2. Remplir les parametres de connexion :
+   * Systeme : PostgreSQL
+   * Serveur : database
+   * Utilisateur : (la valeur de DB_USER)
+   * Mot de passe : (la valeur de DB_PASSWORD)
+   * Base : (la valeur de DB_NAME)
 
 ## Nettoyage
-Pour éteindre l'infrastructure sans perdre les données (grâce aux volumes) :
+Pour eteindre proprement la stack :
 `docker compose down`
-*(Si vous souhaitez tout effacer, y compris la base de données, ajoutez le flag `-v` à la commande).*

@@ -1,31 +1,30 @@
-# TP1 - Réparation d'une image Docker
+# TP1 - Reparation d'une image Docker cassee
 
-Ce projet contient la correction d'un Dockerfile initialement défectueux. L'image a été optimisée pour la production : réduction drastique de la taille (grâce à Alpine), sécurisation (utilisateur non-root), et optimisation du cache de build.
+*Note : Ce projet est complementaire au document Word `tp1-rendu` fait dans le cadre du rendu.*
 
-## Prérequis
-- [Docker](https://www.docker.com/products/docker-desktop/) installé et démarré sur votre machine.
+## Contexte du projet
+L'objectif etait de diagnostiquer et de reecrire completement un Dockerfile inadapte a la production, sans modifier le code source de l'application Node.js.
 
-## Lancer le projet
+## Objectifs atteints
+* Poids de l'image reduit a moins de 200 MB.
+* Aucun secret (mots de passe, cles) n'est present dans l'environnement.
+* Le conteneur s'execute sans les droits root (utilisateur `node`).
+* Le cache Docker a ete optimise.
+* Fichier `.dockerignore` ajoute.
 
-**1. Construire l'image Docker**
-Placez-vous dans ce dossier depuis votre terminal et lancez la construction de l'image :
+## Lancement
+
+1. Construire l'image :
 `docker build -t tp1:corrige .`
 
-**2. Démarrer le conteneur**
-Lancez l'application en arrière-plan en liant le port 3000 :
+2. Lancer l'application :
 `docker run -d --name app-tp1 -p 3000:3000 tp1:corrige`
+Accessible sur **http://localhost:3000**.
 
-**3. Tester l'application**
-Ouvrez votre navigateur web et accédez à :
-**http://localhost:3000**
-
-## Vérifications techniques
-Si vous souhaitez vérifier les critères de sécurité et d'optimisation appliqués :
-
-- **Poids de l'image (< 200MB) :** `docker images tp1:corrige`
-- **Utilisateur sécurisé (node) :** `docker exec app-tp1 whoami`
-- **Absence de secrets :** `docker inspect tp1:corrige --format '{{range .Config.Env}}{{println .}}{{end}}'`
+## Verifications
+* Verifier la taille : `docker images tp1:corrige`
+* Verifier l'utilisateur : `docker run --rm tp1:corrige whoami`
+* Verifier l'absence de secrets : `docker inspect tp1:corrige --format '{{range .Config.Env}}{{println .}}{{end}}' | grep -iE "API_KEY|DB_PASSWORD|DB_HOST"`
 
 ## Nettoyage
-Pour arrêter et supprimer le conteneur une fois vos tests terminés :
 `docker stop app-tp1 && docker rm app-tp1`
